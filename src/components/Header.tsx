@@ -31,8 +31,8 @@ const Header = () => {
 
         {/* CTA Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm">Log in</Button>
-          <Button variant="default" size="sm">Get Started</Button>
+          <Button variant="ghost" size="sm" onClick={() => window.location.href = '/auth'}>Log in</Button>
+          <Button variant="default" size="sm" onClick={() => window.location.href = '/auth'}>Get Started</Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -58,8 +58,8 @@ const Header = () => {
               Pricing
             </a>
             <div className="flex gap-2 mt-2 pt-2 border-t border-border">
-              <Button variant="ghost" size="sm" className="flex-1">Log in</Button>
-              <Button variant="default" size="sm" className="flex-1">Get Started</Button>
+              <Button variant="ghost" size="sm" className="flex-1" onClick={() => window.location.href = '/auth'}>Log in</Button>
+              <Button variant="default" size="sm" className="flex-1" onClick={() => window.location.href = '/auth'}>Get Started</Button>
             </div>
           </nav>
         </div>
