@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { PawPrint, Plus, MessageCircle, LogOut, Activity, Syringe, Stethoscope } from "lucide-react";
 import AddPetDialog from "@/components/AddPetDialog";
 import PetCard from "@/components/PetCard";
 import AIChatDialog from "@/components/AIChatDialog";
+import BottomNavigation from "@/components/BottomNavigation";
+import MobileHeader from "@/components/MobileHeader";
 
 interface Pet {
   id: string;
@@ -20,6 +23,7 @@ interface Pet {
 const Dashboard = () => {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [pets, setPets] = useState<Pet[]>([]);
   const [loadingPets, setLoadingPets] = useState(true);
   const [showAddPet, setShowAddPet] = useState(false);
@@ -74,38 +78,42 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-gradient-hero flex items-center justify-center shadow-glow">
-              <PawPrint className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-lg text-foreground">PetID</span>
-          </a>
+      {/* Header - Mobile vs Desktop */}
+      {isMobile ? (
+        <MobileHeader onSignOut={handleSignOut} />
+      ) : (
+        <header className="border-b border-border bg-card">
+          <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/" className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-xl bg-gradient-hero flex items-center justify-center shadow-glow">
+                <PawPrint className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span className="font-bold text-lg text-foreground">PetID</span>
+            </a>
 
-          <div className="flex items-center gap-4">
-            <Button
-              variant="soft"
-              size="sm"
-              onClick={() => {
-                setSelectedPet(null);
-                setShowAIChat(true);
-              }}
-            >
-              <MessageCircle className="w-4 h-4" />
-              AI Assistant
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </Button>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="soft"
+                size="sm"
+                onClick={() => {
+                  setSelectedPet(null);
+                  setShowAIChat(true);
+                }}
+              >
+                <MessageCircle className="w-4 h-4" />
+                AI Assistant
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className={`container mx-auto px-4 py-6 ${isMobile ? 'pb-bottom-nav' : 'py-8'}`}>
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-card rounded-2xl p-6 shadow-card">
@@ -156,8 +164,12 @@ const Dashboard = () => {
 
         {/* Pets section */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Your Pets</h2>
-          <Button variant="hero" onClick={() => setShowAddPet(true)}>
+          <h2 className="text-xl md:text-2xl font-bold text-foreground">Your Pets</h2>
+          <Button 
+            variant="hero" 
+            onClick={() => setShowAddPet(true)}
+            className="min-h-[44px] touch-manipulation"
+          >
             <Plus className="w-4 h-4" />
             Add Pet
           </Button>
@@ -172,19 +184,33 @@ const Dashboard = () => {
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">No pets yet</h3>
             <p className="text-muted-foreground mb-6">Add your first pet to get started with PetID</p>
-            <Button variant="hero" onClick={() => setShowAddPet(true)}>
+            <Button 
+              variant="hero" 
+              onClick={() => setShowAddPet(true)}
+              className="min-h-[48px] touch-manipulation"
+            >
               <Plus className="w-4 h-4" />
               Add Your First Pet
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {pets.map((pet) => (
               <PetCard key={pet.id} pet={pet} onChatClick={() => openAIChatForPet(pet)} onRefresh={fetchPets} />
             ))}
           </div>
         )}
       </main>
+
+      {/* Bottom Navigation - Mobile only */}
+      {isMobile && (
+        <BottomNavigation
+          onChatClick={() => {
+            setSelectedPet(null);
+            setShowAIChat(true);
+          }}
+        />
+      )}
 
       {/* Dialogs */}
       <AddPetDialog open={showAddPet} onOpenChange={setShowAddPet} onSuccess={fetchPets} />
