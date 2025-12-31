@@ -4,6 +4,13 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
+/* Safe area CSS variables for mobile notches and home indicators */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
 @layer base {
   :root {
     --background: 40 33% 98%;
@@ -134,6 +141,49 @@
 
   .shadow-card {
     box-shadow: var(--shadow-card);
+  }
+
+  /* Safe area utilities for mobile */
+  .safe-area-top {
+    padding-top: var(--sat);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: var(--sab);
+  }
+
+  .safe-area-left {
+    padding-left: var(--sal);
+  }
+
+  .safe-area-right {
+    padding-right: var(--sar);
+  }
+
+  .pt-safe {
+    padding-top: var(--sat);
+  }
+
+  .pb-safe {
+    padding-bottom: var(--sab);
+  }
+
+  /* Touch-friendly sizing */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent text selection on mobile buttons */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* Bottom nav spacing helper */
+  .pb-bottom-nav {
+    padding-bottom: calc(4rem + var(--sab));
   }
 }
 

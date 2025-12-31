@@ -55,20 +55,20 @@ const PetCard = ({ pet, onChatClick, onRefresh }: PetCardProps) => {
   };
 
   return (
-    <div className="bg-card rounded-3xl p-6 shadow-card hover:shadow-soft transition-all duration-300 group">
+    <div className="bg-card rounded-3xl p-5 md:p-6 shadow-card hover:shadow-soft transition-all duration-300 group">
       <div className="flex items-start justify-between mb-4">
-        <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center text-3xl">
+        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-muted flex items-center justify-center text-2xl md:text-3xl">
           {speciesIcons[pet.species] || "🐾"}
         </div>
         <button
           onClick={handleDelete}
-          className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
+          className="p-3 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors md:opacity-0 md:group-hover:opacity-100 min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-5 h-5" />
         </button>
       </div>
 
-      <h3 className="text-xl font-semibold text-foreground mb-1">{pet.name}</h3>
+      <h3 className="text-lg md:text-xl font-semibold text-foreground mb-1">{pet.name}</h3>
       <p className="text-sm text-muted-foreground mb-1">
         {pet.breed || pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}
       </p>
@@ -78,7 +78,11 @@ const PetCard = ({ pet, onChatClick, onRefresh }: PetCardProps) => {
         {calculateAge(pet.date_of_birth)}
       </div>
 
-      <Button variant="soft" size="sm" onClick={onChatClick} className="w-full">
+      <Button 
+        variant="soft" 
+        onClick={onChatClick} 
+        className="w-full min-h-[48px] touch-manipulation"
+      >
         <MessageCircle className="w-4 h-4" />
         Ask AI About {pet.name}
       </Button>
